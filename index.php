@@ -295,6 +295,7 @@ function formatCount(?int $count): string
                         <small>Branch: <?= htmlspecialchars($downloadBranch, ENT_QUOTES) ?></small>
                     </div>
                 </div>
+
                 <div class="repository-meta">
                     <div class="meta-card">
                         <strong>Sterne:</strong>
