@@ -150,6 +150,41 @@ function formatCount(?int $count): string
         .content {
             padding: 20px;
         }
+        .repository-header {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        @media (min-width: 768px) {
+            .repository-header {
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+            }
+        }
+        .download-action {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            align-items: flex-start;
+        }
+        .download-button {
+            display: inline-block;
+            padding: 10px 16px;
+            border-radius: 8px;
+            background: linear-gradient(135deg, #2da44e, #238636);
+            color: #ffffff;
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(45, 164, 78, 0.3);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .download-button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 16px rgba(45, 164, 78, 0.35);
+        }
+        .download-action small {
+            color: #57606a;
+        }
         .intro {
             background: #eef6ff;
             border-left: 4px solid #0969da;
@@ -240,11 +275,27 @@ function formatCount(?int $count): string
         <?php elseif (!$repositoryData): ?>
             <p class="error">Das Repository konnte nicht geladen werden. Bitte versuche es später erneut.</p>
         <?php else: ?>
+            <?php
+                $defaultBranch = trim((string) ($repositoryData['default_branch'] ?? 'main'));
+                $downloadBranch = $defaultBranch !== '' ? $defaultBranch : 'main';
+                $zipDownloadUrl = "https://github.com/{$owner}/{$repo}/archive/refs/heads/" . rawurlencode($downloadBranch) . '.zip';
+            ?>
             <section>
-                <h2>Repository: <a href="<?= htmlspecialchars($repositoryData['html_url'] ?? '#', ENT_QUOTES) ?>" target="_blank" rel="noopener">
-                    <?= htmlspecialchars($repositoryData['full_name'] ?? ($owner . '/' . $repo), ENT_QUOTES) ?>
-                </a></h2>
-                <p><?= htmlspecialchars($repositoryData['description'] ?? 'Keine Beschreibung verfügbar.', ENT_QUOTES) ?></p>
+                <div class="repository-header">
+                    <div>
+                        <h2>Repository: <a href="<?= htmlspecialchars($repositoryData['html_url'] ?? '#', ENT_QUOTES) ?>" target="_blank" rel="noopener">
+                            <?= htmlspecialchars($repositoryData['full_name'] ?? ($owner . '/' . $repo), ENT_QUOTES) ?>
+                        </a></h2>
+                        <p><?= htmlspecialchars($repositoryData['description'] ?? 'Keine Beschreibung verfügbar.', ENT_QUOTES) ?></p>
+                    </div>
+                    <div class="download-action">
+                        <a class="download-button" href="<?= htmlspecialchars($zipDownloadUrl, ENT_QUOTES) ?>" target="_blank" rel="noopener">
+                            Main-Zip herunterladen
+                        </a>
+                        <small>Branch: <?= htmlspecialchars($downloadBranch, ENT_QUOTES) ?></small>
+                    </div>
+                </div>
+
                 <div class="repository-meta">
                     <div class="meta-card">
                         <strong>Sterne:</strong>
