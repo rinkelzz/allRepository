@@ -7,7 +7,8 @@ Diese kleine PHP-Anwendung zeigt auf einer einzigen Seite die wichtigsten Infos 
 - 🧭 Stellt Repository-Details wie Beschreibung, Stars, Forks, Issues und letzte Aktualisierung übersichtlich dar.
 - 🙋‍♀️ Zeigt freundliche Owner-Informationen inklusive Avatar, Bio und Kontaktlinks.
 - 📖 Rendert das README des ausgewählten Repositories direkt auf der Seite für einen unmittelbaren Projektüberblick.
-- 📦 Bietet einen Button, um den Main-Branch (bzw. den Standard-Branch) des Repositories sofort als Zip herunterzuladen.
+
+- 📦 Bietet gut sichtbare Buttons, um den Standard-Branch des gewählten Repositories sofort als ZIP herunterzuladen – direkt neben der Auswahl und im Repository-Header.
 - 🛟 Fängt ungültige Eingaben ab und sorgt dafür, dass immer ein gültiges Repository angezeigt wird.
 
 ## Konfiguration

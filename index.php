@@ -66,8 +66,18 @@ $userData = fetchGithubData("https://api.github.com/users/{$owner}");
 
 $readmeContent = '';
 
+$downloadBranch = null;
+$zipDownloadUrl = null;
+
 if (is_array($readmeData) && isset($readmeData['content'])) {
     $readmeContent = base64_decode($readmeData['content']);
+}
+
+
+if ($repositoryData) {
+    $defaultBranch = trim((string) ($repositoryData['default_branch'] ?? ''));
+    $downloadBranch = $defaultBranch !== '' ? $defaultBranch : 'main';
+    $zipDownloadUrl = "https://github.com/{$owner}/{$repo}/archive/refs/heads/" . rawurlencode($downloadBranch) . '.zip';
 }
 
 function formatCount(?int $count): string
@@ -133,6 +143,22 @@ function formatCount(?int $count): string
             border: 1px solid #d1d5db;
             font-size: 1rem;
             background-color: #ffffff;
+        }
+
+        .download-inline {
+            margin-top: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .download-inline small {
+            color: #57606a;
+        }
+        @media (min-width: 640px) {
+            .download-inline {
+                flex-direction: row;
+                align-items: center;
+            }
         }
         .form-container button {
             padding: 10px 20px;
@@ -264,6 +290,15 @@ function formatCount(?int $count): string
             <?php endif; ?>
             <button type="submit">Laden</button>
         </form>
+
+        <?php if ($zipDownloadUrl): ?>
+            <div class="download-inline">
+                <a class="download-button" href="<?= htmlspecialchars($zipDownloadUrl, ENT_QUOTES) ?>" target="_blank" rel="noopener" aria-label="ZIP von <?= htmlspecialchars($repo, ENT_QUOTES) ?> herunterladen">
+                    ⬇️ ZIP herunterladen
+                </a>
+                <small>Standard-Branch: <?= htmlspecialchars($downloadBranch, ENT_QUOTES) ?></small>
+            </div>
+        <?php endif; ?>
         <p>Aktueller Besitzer: <strong><a href="https://github.com/<?= htmlspecialchars($owner, ENT_QUOTES) ?>" target="_blank" rel="noopener">github.com/<?= htmlspecialchars($owner, ENT_QUOTES) ?></a></strong></p>
     </div>
     <div class="content">
@@ -275,11 +310,6 @@ function formatCount(?int $count): string
         <?php elseif (!$repositoryData): ?>
             <p class="error">Das Repository konnte nicht geladen werden. Bitte versuche es später erneut.</p>
         <?php else: ?>
-            <?php
-                $defaultBranch = trim((string) ($repositoryData['default_branch'] ?? 'main'));
-                $downloadBranch = $defaultBranch !== '' ? $defaultBranch : 'main';
-                $zipDownloadUrl = "https://github.com/{$owner}/{$repo}/archive/refs/heads/" . rawurlencode($downloadBranch) . '.zip';
-            ?>
             <section>
                 <div class="repository-header">
                     <div>
@@ -288,14 +318,16 @@ function formatCount(?int $count): string
                         </a></h2>
                         <p><?= htmlspecialchars($repositoryData['description'] ?? 'Keine Beschreibung verfügbar.', ENT_QUOTES) ?></p>
                     </div>
-                    <div class="download-action">
-                        <a class="download-button" href="<?= htmlspecialchars($zipDownloadUrl, ENT_QUOTES) ?>" target="_blank" rel="noopener">
-                            Main-Zip herunterladen
-                        </a>
-                        <small>Branch: <?= htmlspecialchars($downloadBranch, ENT_QUOTES) ?></small>
-                    </div>
-                </div>
 
+                    <?php if ($zipDownloadUrl): ?>
+                        <div class="download-action">
+                            <a class="download-button" href="<?= htmlspecialchars($zipDownloadUrl, ENT_QUOTES) ?>" target="_blank" rel="noopener">
+                                ⬇️ ZIP herunterladen
+                            </a>
+                            <small>Branch: <?= htmlspecialchars($downloadBranch, ENT_QUOTES) ?></small>
+                        </div>
+                    <?php endif; ?>
+                </div>
                 <div class="repository-meta">
                     <div class="meta-card">
                         <strong>Sterne:</strong>
