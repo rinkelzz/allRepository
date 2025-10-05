@@ -65,12 +65,14 @@ $readmeData = $repo !== '' ? fetchGithubData("https://api.github.com/repos/{$own
 $userData = fetchGithubData("https://api.github.com/users/{$owner}");
 
 $readmeContent = '';
+
 $downloadBranch = null;
 $zipDownloadUrl = null;
 
 if (is_array($readmeData) && isset($readmeData['content'])) {
     $readmeContent = base64_decode($readmeData['content']);
 }
+
 
 if ($repositoryData) {
     $defaultBranch = trim((string) ($repositoryData['default_branch'] ?? ''));
@@ -142,6 +144,7 @@ function formatCount(?int $count): string
             font-size: 1rem;
             background-color: #ffffff;
         }
+
         .download-inline {
             margin-top: 12px;
             display: flex;
@@ -287,6 +290,7 @@ function formatCount(?int $count): string
             <?php endif; ?>
             <button type="submit">Laden</button>
         </form>
+
         <?php if ($zipDownloadUrl): ?>
             <div class="download-inline">
                 <a class="download-button" href="<?= htmlspecialchars($zipDownloadUrl, ENT_QUOTES) ?>" target="_blank" rel="noopener" aria-label="ZIP von <?= htmlspecialchars($repo, ENT_QUOTES) ?> herunterladen">
@@ -314,6 +318,7 @@ function formatCount(?int $count): string
                         </a></h2>
                         <p><?= htmlspecialchars($repositoryData['description'] ?? 'Keine Beschreibung verfügbar.', ENT_QUOTES) ?></p>
                     </div>
+
                     <?php if ($zipDownloadUrl): ?>
                         <div class="download-action">
                             <a class="download-button" href="<?= htmlspecialchars($zipDownloadUrl, ENT_QUOTES) ?>" target="_blank" rel="noopener">
